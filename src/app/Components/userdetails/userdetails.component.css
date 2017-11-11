@@ -1,0 +1,34 @@
+.text-left{
+	text-align: left;
+}
+
+.text-right{
+	text-align: right;
+}
+
+.text-center{
+	text-align: center;
+}
+
+.panel{
+	
+	background: #E5EFF7;
+	padding: 10px 15px;
+}
+
+.fill-content{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13pt;
+	color:#333333;
+}
+
+.fill-content .status-symbol{
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	background: #92C1DE;
+	display: inline-block;
+	font-size: 0;
+	vertical-align: middle;
+	margin:0 5px;
+}

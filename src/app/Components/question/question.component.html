@@ -1,0 +1,164 @@
+
+<!-- <div class="container">
+	<table class="table">
+		<thead>
+			<tr>
+				<th> Question ID </th>
+				<th> Response Value </th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor = "let response of responses">
+				<td>
+					{{response.q_id}}
+				</td>
+				<td>
+					{{response.response}}
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div> -->
+<div class="wrapper {{collapsed?'collapsed':''}}" >
+	<div class="top-strip">
+		<div class="title left-part">
+			<h6> I would like to submit a request for - </h6>
+		</div>
+		<div class="right-part">
+			<a href="#" (click)="toggleCollapse($event)"> <i class="fa fa-plus" aria-hidden="true"></i> <i class="fa fa-minus" aria-hidden="true"></i></a>
+		</div>
+		<div class="clearfix"></div>
+	</div>
+	<div class="content">
+		<form #f="ngForm">
+			<table class="table">
+				<tr *ngFor = "let question of questions">
+					<td>
+						<div class="question">
+							<div class="left-part">
+								<span class="qid">
+									{{question.q_id}}
+								</span>
+								<span class="qtext">
+									 {{question.q_text}}
+								</span>
+							</div>
+							<div class="right-part">
+								<div *ngIf="question.q_type == 'radio'">
+									<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
+										<input (change)="loadDependentQuestions($event)" type="radio" [value]="option.opt_value" id="options_{{question.q_id}}_{{option.opt_value}}" name="options_{{question.q_id}}" >
+										<label for="options_{{question.q_id}}_{{option.opt_value}}">
+											<span class="response-text">{{option.opt_text}}</span>
+										</label>
+									</span>
+								</div>
+								
+								<div *ngIf="question.q_type == 'textarea' ">
+									<textarea (ngModelChange)="saveIt($event,question.q_id)" required pattern="^[\w\s-]+$" class="form-control" name="{{question.q_id}}" id="" cols="30" rows="10" placeholder="{{question.placeholder_title}}" [ngModel] = savedReponses[question.q_id] #description="ngModel"></textarea>
+
+									<div class="errors" *ngIf="description.invalid && (description.dirty || description.touched)" >
+
+									  <div class="error" *ngIf="description.errors.required">
+									    *This field is required.
+									  </div>
+									  <div class="error" *ngIf="description.errors.pattern">
+									    *special charcters not allowed.
+									  </div>
+
+
+									 <!--  <div *ngIf="description.errors.minlength">
+									    Name must be at least 10 characters long.
+									  </div> -->
+									 
+									</div>
+								</div>
+								<div class="error" *ngIf="question.q_type == 'text' ">
+									<input (ngModelChange)="saveIt($event,question.q_id)" required type="text" class="form-control" placeholder="{{question.placeholder_title}}" name="{{question.q_id}}" id="{{question.q_id}}" [ngModel] = savedReponses[question.q_id] #toolLink="ngModel">
+
+									<div class="errors" *ngIf="toolLink.invalid && (toolLink.dirty || toolLink.touched)" >
+										<div  class="error" *ngIf="toolLink.errors.required">
+									    *This field is required.
+									  </div>
+									  <!-- <div class="error" *ngIf="toolLink.errors.required">
+									    *This field is required.
+									  </div> -->
+									  <!-- <div *ngIf="name.errors.minlength">
+									    Name must be at least 4 characters long.
+									  </div> -->
+									 
+									</div>
+								</div>
+								<div *ngIf="question.q_type == 'dropdown' ">
+									<div class="dropdown">
+										<select name="options_{{question.q_id}}" id="options_{{question.q_id}}" (change)="loadDependentQuestions($event)" [ngModel] = savedReponses[question.q_id]>
+										<option [value]="option.opt_value" *ngFor = "let option of question.q_options" >  {{option.opt_text}} </option>
+									</select>
+									</div>
+									
+								</div>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<div class="button-set" >
+				<input  id="btn-continue" class="{{showContinue?'':'disabled'}}" type="submit" value="Continue" (click)="submitAndSaveResponse()">
+			</div>
+		</form>
+	</div>
+	
+</div>
+<!-- 
+<label for="choose-response"> <input type="radio">I would like to submit a request for - </label>
+
+<select >
+	<option *ngFor = "let question of questions" value=""> {{ question.Text }} </option>
+</select> -->
+
+<!-- 
+<div class="container">
+	<hr class="divider">
+	<form #f="ngForm">
+		<div class="form-group" *ngFor = "let question of questions" class="questions">
+			<div class="question">
+				<div>
+					<span class="qtext">
+						{{question.q_text}}
+					</span>
+				</div>
+				<div>
+					<div *ngIf="question.q_type == 'radio' ">
+
+						<div *ngFor = "let option of question.q_options" >
+							
+							<input  type="radio" [value]="option.opt_value" id="options_{{question.q_id}}_{{option.opt_value}}" name="options_{{question.q_id}}" [(ngModel)]="option.data_model" > {{option.opt_text}}
+						</div>
+
+					</div>
+
+					<div *ngIf="question.q_type == 'textarea' ">
+						<textarea name="" id="" cols="30" rows="10"></textarea>
+					</div>
+					<div *ngIf="question.q_type == 'text' ">
+						<input type="text" class="form-control">
+					</div>
+					<div *ngIf="question.q_type == 'dropdown' ">
+						<select name="" id="">
+							<option value="" *ngFor = "let option of question.q_options" > {{option.opt_text}} </option>
+						</select>
+					</div>
+				</div>
+			</div>
+			<hr class="divider">
+		</div>
+		<div class="">
+			{{ Q2 }}
+		</div>
+
+	 </form>
+</div>
+
+ -->
+
+ <div class="container"></div>

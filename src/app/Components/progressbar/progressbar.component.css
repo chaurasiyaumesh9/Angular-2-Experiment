@@ -1,0 +1,71 @@
+.fill-content{
+	text-align: center;
+}
+ul.progress-bar{
+	list-style: none;
+	padding: 0 15px;
+	display: inline-block;
+}
+div.percent-status{
+	margin: 25px 0 5px 0
+
+}
+ul.progress-bar:after{
+	clear: both;
+	content: "";
+	display: block;
+}
+ul.progress-bar{
+	position: relative;
+	padding: 10px 0;
+}
+ul.progress-bar > li{
+	float: left;
+	margin: 0 10px;
+	position: relative;
+}
+.percent-status{
+	display: inline-block;
+	font-family: 'Open Sans', sans-serif;
+	font-size: 13pt;
+	color:#333333;
+}
+ul.progress-bar .striker{
+	position: absolute;
+	left: 0;
+	right: 0;
+	height: 5px;
+    background: #ccc;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: -1;
+}
+ul.progress-bar > li.completed .dot{
+	border:1px solid #4BC986;
+	background:#E5F9EC;
+	text-align: center;
+	font-size: 10px;
+    color: #4BC986;
+    font-weight: normal;
+    vertical-align: middle;
+}
+ul.progress-bar > li.completed .dot .fa{
+	display: inline-block;
+	vertical-align: middle;
+}
+ul.progress-bar > li.active .dot{
+	background: none;
+	border:1px solid blue;
+	background: #B5D1F2;
+}
+ul.progress-bar > li .dot{
+	width: 22px;
+	height: 22px;
+	background: #C8C2C2;
+	border-radius: 50%;
+}
+ul.progress-bar > li .dot .fa{
+	display: none;
+}
+
+

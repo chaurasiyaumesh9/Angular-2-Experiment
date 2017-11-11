@@ -1,0 +1,17 @@
+<div class="row">
+	<div class="col-sm-12">
+		<div class="fill-content">
+			<div class="percent-status">
+				{{Percent}}% Completed
+			</div>
+			<div></div>
+			<ul class="progress-bar">
+				<li *ngFor="let a of fakeArray; let index = index" class="{{ActiveStep==index?'active':index<ActiveStep?'completed':''}}">
+					<div class="dot"><i class="fa fa-check" aria-hidden="true"></i></div>
+				</li>
+				<li class="striker"></li>
+			</ul>
+
+		</div>
+	</div>
+</div>
