@@ -1,0 +1,9 @@
+.section-title{
+	text-align: center;
+	margin: 25px auto;
+}
+.section-title h3{
+	font-family: 'Open Sans', sans-serif;
+	font-size: 23pt;
+	color: #00609A;
+}

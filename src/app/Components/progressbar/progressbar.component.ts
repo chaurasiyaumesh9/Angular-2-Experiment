@@ -15,9 +15,9 @@ export class ProgressbarComponent implements OnInit {
   constructor() { 
   	this.ActiveStep = 2; //considering starts from 0
   	this.TotalSteps = 4;
-    this.Percent = (100/this.TotalSteps) * this.ActiveStep;
+    this.Percent = ((100/this.TotalSteps) * this.ActiveStep).toFixed(1);
 
-  	this.fakeArray = new Array(4);
+  	this.fakeArray = new Array(this.TotalSteps);
   }
 
   ngOnInit() {
