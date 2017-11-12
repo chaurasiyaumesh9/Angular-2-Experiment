@@ -14,7 +14,6 @@
             ],
             "q_text": "Is this a new software?",
             "q_type": "radio",
-            "required":false,
             "scope": [ "global" ],
             "rank":"1"
         },
@@ -43,7 +42,6 @@
             "q_text": "Do you need installation on your machine?",
             "q_type": "radio",
             "rank":"2",
-            "required":true,
             "scope": [ "global" ]
         },
         {
@@ -78,7 +76,6 @@
             "q_type": "dropdown",
             "program": ["P1","P4","P3"],
             "rank":"3",
-            "required":true,
             "scope": [ "limited" ]
         },
         {
@@ -105,7 +102,6 @@
             "q_type": "dropdown",
             "program": ["P3"],
             "rank":"4",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -115,14 +111,12 @@
             "program": ["P3"],
             "placeholder_title":"Enter a description of tool",
             "rank":"5",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
             "q_id": "Q6",
             "q_text": "Add a link to the software",
             "q_type": "text",
-            "required":true,
             "placeholder_title":"Enter a link of software",
             "rank":"13",
             "scope": [ "global" ]
@@ -143,7 +137,6 @@
             "q_type": "radio",
             "program": ["P2"],
             "rank":"6",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -166,7 +159,6 @@
             "q_type": "dropdown",
             "program": ["P2"],
             "rank":"7",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -193,7 +185,6 @@
             "q_type": "dropdown",
             "program": ["P2"],
             "rank":"8",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -212,7 +203,6 @@
             "q_type": "radio",
             "program": ["P4"],
             "rank":"9",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -231,7 +221,6 @@
             "q_type": "radio",
             "program": ["P4"],
             "rank":"10",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -258,7 +247,6 @@
             "q_type": "dropdown",
             "program": ["P4"],
             "rank":"11",
-            "required":false,
             "scope": [ "limited" ]
         },
         {
@@ -276,7 +264,6 @@
             "q_text": "Is this going to be provided by anthem?",
             "q_type": "radio",
             "rank":"12",
-            "required":false,
             "program": ["P4"],
             "scope": [ "limited" ]
         }

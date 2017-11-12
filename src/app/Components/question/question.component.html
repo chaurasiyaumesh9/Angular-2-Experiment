@@ -1,24 +1,4 @@
 
-<!-- <div class="container">
-	<table class="table">
-		<thead>
-			<tr>
-				<th> Question ID </th>
-				<th> Response Value </th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr *ngFor = "let response of responses">
-				<td>
-					{{response.q_id}}
-				</td>
-				<td>
-					{{response.response}}
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div> -->
 <div class="wrapper {{collapsed?'collapsed':''}}" >
 	<div class="top-strip">
 		<div class="title left-part">
@@ -30,6 +10,8 @@
 		<div class="clearfix"></div>
 	</div>
 	<div class="content">
+
+		<!--
 		<form #f="ngForm">
 			<table class="table">
 				<tr *ngFor = "let question of questions">
@@ -64,11 +46,6 @@
 									  <div class="error" *ngIf="description.errors.pattern">
 									    *special charcters not allowed.
 									  </div>
-
-
-									 <!--  <div *ngIf="description.errors.minlength">
-									    Name must be at least 10 characters long.
-									  </div> -->
 									 
 									</div>
 								</div>
@@ -79,12 +56,6 @@
 										<div  class="error" *ngIf="toolLink.errors.required">
 									    *This field is required.
 									  </div>
-									  <!-- <div class="error" *ngIf="toolLink.errors.required">
-									    *This field is required.
-									  </div> -->
-									  <!-- <div *ngIf="name.errors.minlength">
-									    Name must be at least 4 characters long.
-									  </div> -->
 									 
 									</div>
 								</div>
@@ -105,60 +76,61 @@
 			<div class="button-set" >
 				<input  id="btn-continue" class="{{showContinue?'':'disabled'}}" type="submit" value="Continue" (click)="submitAndSaveResponse()">
 			</div>
+		</form> -->
+
+		<form *ngIf="myForm" [formGroup]="myForm" novalidate (ngSubmit)="save(myForm)">
+			<table class="table">
+				<tr *ngFor = "let question of questions">
+					<td>
+						<div class="question">
+							<div class="left-part">
+								<span class="qid">
+									{{question.q_id}}
+								</span>
+								<span class="qtext">
+									 {{question.q_text}}
+								</span>
+							</div>
+							<div class="right-part" [ngSwitch]="question.q_type">
+								 <div *ngSwitchCase="'radio'">
+										<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
+											<input formControlName="{{question.q_id}}" type="radio" value="{{option.opt_value}}" id="options_{{question.q_id}}_{{option.opt_value}}"  >
+											<label for="options_{{question.q_id}}_{{option.opt_value}}">
+												<span class="response-text">{{option.opt_text}}</span>
+											</label>
+										</span>
+										<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+								 </div>
+																
+								<div *ngSwitchCase="'textarea'" >
+									<textarea formControlName="{{question.q_id}}"  required pattern="^[\w\s-]+$" class="form-control" name="{{question.q_id}}" id="" cols="30" rows="10" placeholder="{{question.placeholder_title}}" ></textarea>
+									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+								</div>
+								<div *ngSwitchCase="'text'">
+									<input formControlName="{{question.q_id}}" type="text" class="form-control" placeholder="{{question.placeholder_title}}" name="{{question.q_id}}" id="{{question.q_id}}" >
+									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+								</div>
+								<div *ngSwitchCase="'dropdown'">
+									<div class="dropdown">
+										<select name="options_{{question.q_id}}" id="options_{{question.q_id}}" formControlName="{{question.q_id}}"S >
+										<option  *ngFor = "let option of question.q_options" [ngValue]="option.opt_value">  {{option.opt_text}} </option>
+										</select>
+									</div>
+									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+								</div>
+								
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+
+			<div class="button-set" >
+				<input  id="btn-continue" type="submit" value="Continue" [disabled]="!myForm.valid" >
+			</div>
+			  <pre>{{myForm.value | json}}</pre>
+
 		</form>
 	</div>
 	
 </div>
-<!-- 
-<label for="choose-response"> <input type="radio">I would like to submit a request for - </label>
-
-<select >
-	<option *ngFor = "let question of questions" value=""> {{ question.Text }} </option>
-</select> -->
-
-<!-- 
-<div class="container">
-	<hr class="divider">
-	<form #f="ngForm">
-		<div class="form-group" *ngFor = "let question of questions" class="questions">
-			<div class="question">
-				<div>
-					<span class="qtext">
-						{{question.q_text}}
-					</span>
-				</div>
-				<div>
-					<div *ngIf="question.q_type == 'radio' ">
-
-						<div *ngFor = "let option of question.q_options" >
-							
-							<input  type="radio" [value]="option.opt_value" id="options_{{question.q_id}}_{{option.opt_value}}" name="options_{{question.q_id}}" [(ngModel)]="option.data_model" > {{option.opt_text}}
-						</div>
-
-					</div>
-
-					<div *ngIf="question.q_type == 'textarea' ">
-						<textarea name="" id="" cols="30" rows="10"></textarea>
-					</div>
-					<div *ngIf="question.q_type == 'text' ">
-						<input type="text" class="form-control">
-					</div>
-					<div *ngIf="question.q_type == 'dropdown' ">
-						<select name="" id="">
-							<option value="" *ngFor = "let option of question.q_options" > {{option.opt_text}} </option>
-						</select>
-					</div>
-				</div>
-			</div>
-			<hr class="divider">
-		</div>
-		<div class="">
-			{{ Q2 }}
-		</div>
-
-	 </form>
-</div>
-
- -->
-
- <div class="container"></div>

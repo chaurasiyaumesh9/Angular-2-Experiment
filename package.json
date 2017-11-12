@@ -24,6 +24,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@angular/animations": "5.0.1",
     "@angular/cdk": "5.0.0-rc0",
     "@angular/common": "~2.4.0",
     "@angular/compiler": "~2.4.0",
