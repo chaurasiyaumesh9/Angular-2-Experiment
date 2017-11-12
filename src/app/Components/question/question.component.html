@@ -78,7 +78,7 @@
 			</div>
 		</form> -->
 
-		<form *ngIf="myForm" [formGroup]="myForm" novalidate (ngSubmit)="save(myForm)">
+		<form *ngIf="myForm" [formGroup]="myForm" novalidate (ngSubmit)="saveForm(myForm)">
 			<table class="table">
 				<tr *ngFor = "let question of questions">
 					<td>
@@ -93,13 +93,13 @@
 							</div>
 							<div class="right-part" [ngSwitch]="question.q_type">
 								 <div *ngSwitchCase="'radio'">
-										<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
-											<input formControlName="{{question.q_id}}" type="radio" value="{{option.opt_value}}" id="options_{{question.q_id}}_{{option.opt_value}}"  >
-											<label for="options_{{question.q_id}}_{{option.opt_value}}">
-												<span class="response-text">{{option.opt_text}}</span>
-											</label>
-										</span>
-										<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+									<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
+										<input formControlName="{{question.q_id}}" type="radio" value="{{option.opt_value}}" id="options_{{question.q_id}}_{{option.opt_value}}"  >
+										<label for="options_{{question.q_id}}_{{option.opt_value}}">
+											<span class="response-text">{{option.opt_text}}</span>
+										</label>
+									</span>
+									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
 								 </div>
 																
 								<div *ngSwitchCase="'textarea'" >
@@ -126,9 +126,19 @@
 			</table>
 
 			<div class="button-set" >
-				<input  id="btn-continue" type="submit" value="Continue" [disabled]="!myForm.valid" >
+					<input id="btn-continue" class="{{showContinue?'':'disabled'}}" type="submit" value="Continue" [disabled]="!showContinue" > 
 			</div>
-			  <pre>{{myForm.value | json}}</pre>
+			<div class="row">
+				<div class="col-sm-6">
+					<pre>{{myForm.value | json}}</pre>
+				</div>
+				<!-- <div class="col-sm-6">
+					<pre>{{savedResponse | json}}</pre>
+				</div> -->
+			</div>
+			  
+
+			  
 
 		</form>
 	</div>
