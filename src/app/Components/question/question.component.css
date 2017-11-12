@@ -165,9 +165,13 @@ select {
 
 .errors{
   margin:5px 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .errors .error{
   color:#f00;
   font-size: 12px;
   font-family: 'Open Sans', sans-serif;
 }
+

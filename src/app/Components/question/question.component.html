@@ -92,31 +92,64 @@
 								</span>
 							</div>
 							<div class="right-part" [ngSwitch]="question.q_type">
-								 <div *ngSwitchCase="'radio'">
+								 <div *ngSwitchCase="'radio'" >
 									<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
 										<input formControlName="{{question.q_id}}" type="radio" value="{{option.opt_value}}" id="options_{{question.q_id}}_{{option.opt_value}}"  >
 										<label for="options_{{question.q_id}}_{{option.opt_value}}">
 											<span class="response-text">{{option.opt_text}}</span>
 										</label>
 									</span>
-									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+									<div>
+										<ul class="errors">
+											<li>
+												<div class="error" *ngIf="isFieldValid(question.q_id)">
+												  *Field is required
+												</div>
+											</li>
+										</ul>
+									</div>
 								 </div>
 																
 								<div *ngSwitchCase="'textarea'" >
 									<textarea formControlName="{{question.q_id}}"  required pattern="^[\w\s-]+$" class="form-control" name="{{question.q_id}}" id="" cols="30" rows="10" placeholder="{{question.placeholder_title}}" ></textarea>
-									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+									<div>
+										<ul class="errors">
+											<li>
+												<div class="error" *ngIf="isFieldValid(question.q_id)">
+												  *Field is required
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
-								<div *ngSwitchCase="'text'">
+								<div *ngSwitchCase="'text'" >
 									<input formControlName="{{question.q_id}}" type="text" class="form-control" placeholder="{{question.placeholder_title}}" name="{{question.q_id}}" id="{{question.q_id}}" >
-									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+									<div>
+										<ul class="errors">
+											<li>
+												<div class="error" *ngIf="isFieldValid(question.q_id)">
+												  *Field is required
+												</div>
+											</li>
+										</ul>
+									</div>
 								</div>
-								<div *ngSwitchCase="'dropdown'">
+								<div *ngSwitchCase="'dropdown'" >
 									<div class="dropdown">
 										<select name="options_{{question.q_id}}" id="options_{{question.q_id}}" formControlName="{{question.q_id}}"S >
 										<option  *ngFor = "let option of question.q_options" [ngValue]="option.opt_value">  {{option.opt_text}} </option>
 										</select>
 									</div>
-									<!-- <div class="errorMessage" *ngIf="!myForm.controls[question.q_id].valid">*required</div> -->
+									<div>
+										<ul class="errors">
+											<li>
+												<div class="error" *ngIf="isFieldValid(question.q_id)">
+												  *Field is required
+												</div>
+											</li>
+										</ul>
+									</div>
+									
 								</div>
 								
 							</div>
@@ -126,7 +159,7 @@
 			</table>
 
 			<div class="button-set" >
-					<input id="btn-continue" class="{{showContinue?'':'disabled'}}" type="submit" value="Continue" [disabled]="!showContinue" > 
+					<input id="btn-continue"  type="submit" value="Continue" class="{{showContinue?'':'disabled'}}" [disabled]="!showContinue" > 
 			</div>
 			<div class="row">
 				<div class="col-sm-6">

@@ -115,7 +115,7 @@
             "program": ["P3"],
             "placeholder_title":"Enter a description of tool",
             "rank":"5",
-            "required":false,
+            "required":true,
             "scope": [ "limited" ]
         },
         {

@@ -18,7 +18,11 @@ export class QuestionComponent implements OnInit {
   globalQuestions = [];
   savedResponse = {};
   collapsed = false;
-  showContinue = false
+  showContinue = false;
+
+    isFieldValid(field: string) {
+      return  this.myForm.get(field).hasError('required') && this.myForm.get(field).touched;
+    }
 
     toggleContinue(){
       let formData = this.myForm.value;
@@ -39,6 +43,17 @@ export class QuestionComponent implements OnInit {
     }
     toggleCollapse(evt){
       this.collapsed = !this.collapsed;
+    }
+
+    validateAllFormFields(formGroup: FormGroup) {  
+      Object.keys(formGroup.controls).forEach(field => {  
+        const control = formGroup.get(field);             
+        if (control instanceof FormControl) {            
+          control.markAsTouched({ onlySelf: true });
+        } else if (control instanceof FormGroup) {       
+          this.validateAllFormFields(control);           
+        }
+      });
     }
 
     createControls(){
@@ -74,11 +89,14 @@ export class QuestionComponent implements OnInit {
        return null;
     }
     getAnswerByproperty(questionObj, propertyObj){
-      for(let i=0;i<questionObj['q_options'].length; i++){
-        if ( questionObj['q_options'][i][propertyObj.key] == propertyObj.value) {
-          return questionObj['q_options'][i];
-        };
-      }
+      if ('q_options' in questionObj) {
+        for(let i=0;i<questionObj['q_options'].length; i++){
+          if ( questionObj['q_options'][i][propertyObj.key] == propertyObj.value) {
+            return questionObj['q_options'][i];
+          };
+        }
+      };
+      
       return null;
     }
    
@@ -148,6 +166,12 @@ export class QuestionComponent implements OnInit {
     saveForm( formData ) {
         // call API to save customer
         console.log(formData);
+
+         if (this.myForm.valid) {
+          console.log('form submitted');
+        } else {
+          this.validateAllFormFields(this.myForm); //{7}
+        }
     }
 
   ngOnInit() {
