@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe } from '@angular/core';
 
 import { QuestionService } from '../../Services/question.service';
 
+import { Validators, FormGroup, FormArray, FormBuilder, FormControl } from '@angular/forms';
 
 
 @Component({
@@ -10,131 +11,186 @@ import { QuestionService } from '../../Services/question.service';
   styleUrls: ['app/Components/question/question.component.css']
 })
 export class QuestionComponent implements OnInit {
+  public myForm: FormGroup; // our form model
 
-  constructor( private _questionService: QuestionService ) { }
+  constructor( private _questionService: QuestionService, private _fb: FormBuilder ) { }
   questions = [];
   globalQuestions = [];
-  visibleQuestions = [];
-  savedReponses = {};
+  savedResponse = {};
+  collapsed = false;
   showContinue = false;
-  
+  formLocked = false;
 
-  private _prevSelected: any;
-
-    collapsed = false;
-    toggleCollapse(evt){
-
-      this.collapsed = !this.collapsed;
-    }
-
-    saveResponses( question ){
-      if (!question) {return null;};
-     
-      this.savedReponses[question.q_id] = question.response;
-    }
-
-    ifAlreadyResponded( questionid ){
-        for (let qid in this.savedReponses) {
-          if (this.savedReponses.hasOwnProperty(questionid)) {
-            return true;
-          }
-        }
-        return false;
+    isFieldValid(field: string) {
+      return  this.myForm.get(field).hasError('required') && this.myForm.get(field).touched;
     }
 
     toggleContinue(){
-      var size = Object.keys(this.savedReponses).length;
+      let formData = this.myForm.value;
 
-      if (size>0) {this.showContinue = true}else{this.showContinue = false;};
-    }
-
-    submitAndSaveResponse(){
-      console.log('submitAndSaveResponse : ',this.savedReponses);
-    }
-
-    saveIt(newValue, qid){
-      this.savedReponses[qid] = newValue;
-      console.log('this.savedReponses : ',this.savedReponses);
-    }
-    clearValidationMessages(){
-
-    }
-
-    loadDependentQuestions(evt) {
-      let target = evt.target;
-      
-      let question_id,answer_id;
-      if (target.nodeName.toLowerCase() == "input") {
-          question_id = target.id.split('_')[1];
-          answer_id = target.id.split('_')[2];;
-      }else if( target.nodeName.toLowerCase() == "select" ){
-          question_id = target.id.split('_')[1];
-          answer_id = target.value;;
+      let len = Object.keys(formData).length;
+      let count = 0;
+      for( let k in formData){
+        if (!formData[k] || formData[k] == "" ) {
+          count++;
+        };
       }
-
-      let response = {
-        "q_id": question_id,
-        "response": answer_id
+      if (count == len ) {
+        this.showContinue = false;
+      }else{
+        this.showContinue =  true;
       };
-      //console.log('response : ',response);
-      this.saveResponses( response );
-      //console.log('question_id : ',question_id,',answer_id : ',answer_id);
+      //console.log('formData : ',len);
+    }
+    toggleCollapse(evt){
+      this.collapsed = !this.collapsed;
+    }
 
-      if (question_id && answer_id) {
-        this._questionService.getProgram(question_id,answer_id).subscribe(programs => {
-          //console.log('programs : ',programs);
-          if( programs && programs.length > 0 ){
-            this._questionService.getQuestionsByProgramId(programs[0]).subscribe(questions => {
-            //  console.log('questions :',questions);
+    validateAllFormFields(formGroup: FormGroup) {  
+      Object.keys(formGroup.controls).forEach(field => {  
+        const control = formGroup.get(field);             
+        if (control instanceof FormControl) {            
+          control.markAsTouched({ onlySelf: true });
+        } else if (control instanceof FormGroup) {       
+          this.validateAllFormFields(control);           
+        }
+      });
+    }
 
-              for( let k=0;k<questions.length;k++){
-                if (question_id !== questions[k]['q_id']) {
-                  if (questions[k].q_type.toLowerCase() == "dropdown") {
-                    this.savedReponses[questions[k]['q_id']] = "-1";
-                  };
-                  
-                };
-              }
-              this.questions = this.globalQuestions.concat(questions);
-
-              this.questions = this.questions.sort(function(a, b) {
-                  return parseInt(a.rank) - parseInt(b.rank);
-              });
-            });
+    createControls(){
+        let group:any = {};
+        this.questions.forEach((question) => {
+          if ( question['q_id'] in this.savedResponse ) {
+            if (question.required) {
+              group[question.q_id] = new FormControl(this.savedResponse[question['q_id']], Validators.required);
+            }else{
+              group[question.q_id] = new FormControl(this.savedResponse[question['q_id']]);
+            }
+          }else{
+            if(question.required){
+                group[question.q_id] = new FormControl('', Validators.required);
+            }
+            else{
+                group[question.q_id] = new FormControl('');
+            }
           }
         });
-      };
-      this.toggleContinue();
-      console.log('this.savedReponses : ',this.savedReponses);
+        return new FormGroup(group);;
     }
 
 
-  ngOnInit() {
-
-     this._questionService.getAllQuestions()
-     .subscribe(resQuestionData => {
-      //this.questions = resQuestionData
-      for(let i=0;i<resQuestionData.length;i++){
-        let question = resQuestionData[i];
-        if (question.q_type.toLowerCase() == "dropdown") {
-          this.savedReponses[question['q_id']] = "-1";
-        }
-        if (question.q_type.toLowerCase() == "textarea" || question.q_type.toLowerCase() == "text") {
-          this.savedReponses[question['q_id']] = "";
-        }
-
-        
+    getQuestionByProperty(propertyObj){
+      for( let i=0; i<this.questions.length; i++){
+        if ( propertyObj.key in this.questions[i]) {
+          if (this.questions[i][propertyObj.key] == propertyObj.value) {
+            return this.questions[i];
+          };
+        };
       }
-     });
+       return null;
+    }
+    getAnswerByproperty(questionObj, propertyObj){
+      if ('q_options' in questionObj) {
+        for(let i=0;i<questionObj['q_options'].length; i++){
+          if ( questionObj['q_options'][i][propertyObj.key] == propertyObj.value) {
+            return questionObj['q_options'][i];
+          };
+        }
+      };
+      
+      return null;
+    }
+   
+    createForm(){
+      this.myForm = this.createControls();
+      this.onFormChanges();
+    }
 
+    getProgramByAnswer(qid,ansid){
+      if (Number(ansid) >= 0 ) {
+        let question = this.getQuestionByProperty({
+          'key':'q_id',
+          'value':qid
+        });
+        let option = this.getAnswerByproperty(question,{
+          'key':'opt_value',
+          "value": ansid
+        });
+        if (option) {
+          if ( 'program' in option) {
+            if (option.program instanceof Array) {
+              return option.program[0];
+            };
+          };
+        }; 
+      };
+      
+      return null;
+    }
+
+    getQuestionIds(){
+      return this.questions.map(function(question){
+        return question['q_id'];
+      });
+    }
+    questionHandler( qid, ansid ){
+      let programid = this.getProgramByAnswer(qid, ansid);
+      if (programid) {
+        this._questionService.getQuestionsByProgramId(programid).subscribe(questions => {
+            this.savedResponse = this.myForm.value;
+            this.questions = this.globalQuestions.concat(questions);
+            //this.filterResponse();
+            this.setQuestionsInOrder();
+            this.createForm();
+        });
+      };
+      
+    }
+
+    onFormChanges(): void {
+      this.myForm.valueChanges.subscribe((value: string) => {
+        this.toggleContinue();
+      });
+      for( let control in this.myForm.controls ){
+        this.myForm.controls[control].valueChanges.subscribe((response: string) => {
+          this.questionHandler(control,response);
+        });
+      }
+    };
+
+    setQuestionsInOrder(){
+      this.questions = this.questions.sort(function(a, b) {
+          return parseInt(a.rank) - parseInt(b.rank);
+      });
+    }
+
+    lockAllFields(){
+      this.formLocked = true;
+    }
+
+    saveForm( formData ) {
+        // call API to save customer
+        console.log(formData);
+
+         if (this.myForm.valid) {
+          console.log('form submitted');
+          this.lockAllFields();
+          
+
+        } else {
+          this.validateAllFormFields(this.myForm); //{7}
+        }
+    }
+
+  ngOnInit() {
     this._questionService.getQuestionByScope('global')
     .subscribe(resQuestionData => {
       this.globalQuestions = resQuestionData;
       this.questions = this.globalQuestions;
+
+      this.createForm();
+      
     });
-    
-
-
   }
 
 }
