@@ -175,3 +175,9 @@ select {
   font-family: 'Open Sans', sans-serif;
 }
 
+
+
+.disabled{
+  pointer-events:none;
+  opacity: 0.5;
+}

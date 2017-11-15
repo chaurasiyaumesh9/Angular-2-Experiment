@@ -19,6 +19,7 @@ export class QuestionComponent implements OnInit {
   savedResponse = {};
   collapsed = false;
   showContinue = false;
+  formLocked = false;
 
     isFieldValid(field: string) {
       return  this.myForm.get(field).hasError('required') && this.myForm.get(field).touched;
@@ -163,12 +164,19 @@ export class QuestionComponent implements OnInit {
       });
     }
 
+    lockAllFields(){
+      this.formLocked = true;
+    }
+
     saveForm( formData ) {
         // call API to save customer
         console.log(formData);
 
          if (this.myForm.valid) {
           console.log('form submitted');
+          this.lockAllFields();
+          
+
         } else {
           this.validateAllFormFields(this.myForm); //{7}
         }

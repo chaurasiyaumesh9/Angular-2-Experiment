@@ -91,7 +91,7 @@
 									 {{question.q_text}}
 								</span>
 							</div>
-							<div class="right-part" [ngSwitch]="question.q_type">
+							<div [ngSwitch]="question.q_type" class="right-part {{!formLocked?'':'disabled'}}">
 								 <div *ngSwitchCase="'radio'" >
 									<span *ngFor = "let option of question.q_options" class="response-text-wrapper">
 										<input formControlName="{{question.q_id}}" type="radio" value="{{option.opt_value}}" id="options_{{question.q_id}}_{{option.opt_value}}"  >
