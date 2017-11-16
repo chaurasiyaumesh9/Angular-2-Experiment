@@ -23,8 +23,15 @@ export class UserdetailsComponent implements OnInit {
     this._userService.getUserDetails()
     .subscribe(userResponse => {
       this.UserName = userResponse['UserName'];
-      this.ApplicationID = userResponse['ApplicationID'];
+      //this.ApplicationID = userResponse['ApplicationID'];
       this.Status = userResponse['Status'];
+    });
+
+    this._userService.getAppID()
+    .subscribe(userResponse => {
+      
+      this.ApplicationID = userResponse['appid'];
+  
     });
   }
 
