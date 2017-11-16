@@ -15,10 +15,17 @@ import "rxjs/add/operator/filter";
 export class UserdetailsService {
 
   private _url: string = "/assets/userdetails.json";
+  private _appserviceurl: string = "http://localhost:3000/appid";
     constructor(private _http: Http) {}
 
-  getUserDetails() {
+    getUserDetails() {
         return this._http.get(this._url).map((response: Response) => {
+            let _response = response.json();
+            return _response;
+        });
+    }
+    getAppID() {
+        return this._http.get(this._appserviceurl).map((response: Response) => {
             let _response = response.json();
             return _response;
         });
